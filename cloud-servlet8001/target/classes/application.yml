@@ -1,0 +1,45 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: cloud-payment-servlet
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/top_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  cache:
+    type: redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0ms
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      #设置与Eureka Server 交互的地址。查询服务和注册服务都需要这个依赖这个地址。
+      defaultZone: http://localhost:7001/eureka
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

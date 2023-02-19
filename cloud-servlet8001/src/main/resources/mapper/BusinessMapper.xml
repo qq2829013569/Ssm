@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.dao.BusineDao">
+
+    <resultMap id="BusinessMap" type="com.cloud.pojo.Business">
+        <id column="bs_Id" property="bsId" jdbcType="INTEGER"/>
+        <result column="bs_Code" property="bsCode" jdbcType="VARCHAR"/>
+        <result column="bs_Name" property="bsName" jdbcType="VARCHAR"/>
+        <result column="bs_SName" property="bsSName" jdbcType="VARCHAR"/>
+        <result column="bs_Phone" property="bsPhone" jdbcType="VARCHAR"/>
+        <result column="bs_Arrdes" property="bsArrdes" jdbcType="VARCHAR"/>
+        <result column="business" property="business" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getListBus" parameterType="com.cloud.pojo.Business" resultMap="BusinessMap">
+        select bs_Id,bs_Code,bs_Name,bs_SName,bs_Phone,bs_Arrdes,business from business where 1=1
+            <if test="bsId != null and bsId != ''">
+                and bs_Id = #{bsId}
+            </if>
+            <if test="bsCode != null and bsCode != ''">
+                and bs_Code = #{bsCode}
+            </if>
+            <if test="bsName != null and bsName != ''">
+                and bs_Name = #{bsName}
+            </if>
+            <if test="bsSName != null and bsSName != ''">
+                and bs_SName = #{bsSName}
+            </if>
+            <if test="bsPhone != null and bsPhone != ''">
+                and bs_Phone = #{bsPhone}
+            </if>
+            <if test="bsArrdes != null and bsArrdes != ''">
+                and bs_Arrdes = #{bsArrdes}
+            </if>
+            <if test="business != null and business != ''">
+                and business = #{business}
+            </if>
+            <if test="pageNum != null and pageNum != '' ">
+                LIMIT #{pageSize},#{pageNum}
+            </if>
+    </select>
+
+    <insert id="setInsert" parameterType="com.cloud.pojo.Business" keyProperty="bsId" useGeneratedKeys="true">
+        insert into business(bs_Code,bs_paw,bs_Name,bs_SName,bs_phone,bs_Arrdes,business)values
+                            (#{bsCode},#{bsPaw},#{bsName},#{bsSName},#{bsPhone},#{bsArrdes},#{business})
+    </insert>
+
+    <select id="getSelCode" resultType="String">
+        select bs_Code from business where bs_Code=#{bsCode}
+    </select>
+
+    <delete id="delBusAllId" parameterType="Integer">
+        delete from business where bs_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")" nullable="true">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delBusId" parameterType="Integer">
+        delete from business where bs_id=#{bsId}
+    </delete>
+
+    <select id="getSelNum" resultMap="BusinessMap" parameterType="com.cloud.pojo.Business">
+        select bs_Id,bs_Code,bs_Name,bs_SName from business where bs_Id in
+        <foreach collection="list" item="item" open="(" separator="," close=")" nullable="true">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="LoginBus" resultMap="BusinessMap" parameterType="com.cloud.pojo.Business">
+        select bs_Code,bs_Name,bs_SName,bs_Phone,bs_Arrdes from business where bs_Code=#{bsCode} and bs_Paw=#{bsPaw}
+    </select>
+</mapper>

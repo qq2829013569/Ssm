@@ -1,0 +1,5 @@
+com\cloud\server\CustomerServer.class
+com\cloud\ServletMain8001.class
+com\cloud\server\impl\CustomerServerImpl.class
+com\cloud\dao\CustomerDao.class
+com\cloud\controller\CustomerController.class

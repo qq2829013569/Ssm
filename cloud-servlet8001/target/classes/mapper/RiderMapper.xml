@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.dao.RiderDao">
+
+    <insert id="setInsert" parameterType="com.cloud.pojo.Rider" useGeneratedKeys="true" keyProperty="riderId">
+        insert into rider(rider_Code,rider_Paw,rider_Name,rider_Phome,rider_Hp)
+        VALUES (#{riderCode},#{riderPaw},#{riderName},#{riderPhome},#{riderHp})
+    </insert>
+
+    <select id="getRiderCode" resultType="String">
+        select rider_Code from rider where rider_Code = #{riderCode}
+    </select>
+
+    <resultMap id="riderMap" type="com.cloud.pojo.Rider">
+        <id column="rider_Id" property="riderId" jdbcType="INTEGER"/>
+        <result column="rider_Code" property="riderCode" jdbcType="VARCHAR"/>
+        <result column="rider_Paw" property="riderPaw" jdbcType="VARCHAR"/>
+        <result column="rider_Name" property="riderName" jdbcType="VARCHAR"/>
+        <result column="rider_Phome" property="riderPhome" jdbcType="VARCHAR"/>
+        <result column="rider_Hp" property="riderHp" jdbcType="VARCHAR"/>
+    </resultMap>
+
+        <select id="getListRider" parameterType="com.cloud.pojo.Rider" resultMap="riderMap">
+        select rider_Id,rider_Code,rider_Name,rider_Phome,rider_Hp from rider where 1=1
+        <if test="riderId != null and riderId != ''">
+            and rider_Id=#{riderId}
+        </if>
+        <if test="riderCode != null and riderCode != ''">
+            and rider_Code=#{riderCode}
+        </if>
+        <if test="riderName != null and riderName != ''">
+            and rider_Name=#{riderName}
+        </if>
+        <if test="riderPhome != null and riderPhome != ''">
+            and #{riderPhome}
+        </if>
+        <if test="riderHp != null and riderHp !=''">
+            and rider_Hp=#{riderHp}
+        </if>
+        <if test="pageNum != null and pageNum != ''">
+            LIMIT #{pageSize},#{pageNum}
+        </if>
+    </select>
+    <select id="getLogin" resultMap="riderMap" parameterType="com.cloud.pojo.Rider">
+        select rider_Code,rider_Name,rider_Phome,rider_Hp from rider where rider_Code=#{riderCode} and rider_Paw=#{riderPaw}
+    </select>
+
+    <delete id="delListId" parameterType="com.cloud.pojo.Rider">
+        delete from rider where rider_Id in
+        <foreach collection="list" item="item" open="(" separator="," close=")" nullable="true">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delRiderId" parameterType="Integer">
+        delete from rider where rider_Id=#{riderId}
+    </delete>
+</mapper>
+

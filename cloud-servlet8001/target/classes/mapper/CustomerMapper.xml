@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cloud.dao.CustomerDao">
+    <insert id="setInsert" parameterType="com.cloud.pojo.Customer" useGeneratedKeys="true" keyProperty="customerId">
+        insert into customer(customerCode,customerPaw,customerName,customerPhone,customerAddress,customer_Birthday)values
+                            (#{customerCode},#{customerPaw},#{customerName},#{customerPhone},#{customerAddress},#{customerBirthday})
+    </insert>
+
+    <resultMap id="CustomerMap" type="com.cloud.pojo.Customer">
+        <id column="customerId" property="customerId" jdbcType="INTEGER"/>
+        <result column="customerCode" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="customerName" property="customerName" jdbcType="VARCHAR"/>
+        <result column="customerPhone" property="customerPhone" jdbcType="VARCHAR"/>
+        <result column="customerAddress" property="customerAddress" jdbcType="VARCHAR"/>
+        <result column="bsPhone" property="bsPhone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getIdSelect" parameterType="com.cloud.pojo.Customer" resultMap="CustomerMap">
+        select customerId,customerCode,customerName,customerPhone,customerAddress,customer_Birthday from customer where 1=1
+        <if test="customerId != null and customerId!= ''">
+            and customerId=#{customerId}
+        </if>
+        <if test="customerCode != null and customerCode!=''">
+            and customerCode=#{customerCode}
+        </if>
+        <if test="customerName != null and customerName!=''">
+            and customerName=#{customerName}
+        </if>
+        <if test="customerPhone != null and customerPhone!=''">
+            and customerPhone=#{customerPhone}
+        </if>
+        <if test="customerAddress != null and customerAddress!=''">
+            and customerAddress=#{customerAddress}
+        </if>
+        <if test="customerBirthday != null and customerBirthday!=''">
+            and customer_Birthday=#{customerBirthday}
+        </if>
+        <if test="pageNum != null and pageNum != ''">
+            LIMIT #{pageSize},#{pageNum}
+        </if>
+    </select>
+
+    <select id="getSelCode" resultType="String">
+        select customerCode from customer where customerCode=#{customerCode}
+    </select>
+
+    <delete id="delCunList" parameterType="Integer">
+        delete from customer where customerId in
+        <foreach collection="list" item="item" open="(" separator="," close=")" nullable="true">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delCusId" parameterType="Integer">
+        delete from customer where customerId=#{customerId}
+    </delete>
+
+    <select id="getLoginCus" resultMap="CustomerMap" parameterType="com.cloud.pojo.Customer">
+        select customerCode,customerName,customerPhone,customerAddress,customer_Birthday from
+        customer where customerCode=#{customerCode} and customerPaw=#{customerPaw}
+    </select>
+    <insert id="setInsertHp" parameterType="String">
+        insert into customer(customer_Hp)values (#{customerHp})
+    </insert>
+</mapper>
